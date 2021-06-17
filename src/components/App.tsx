@@ -25,6 +25,7 @@ const App: VFC = () => {
         setLocalPeerName={setLocalPeerName}
       />
       <InputFormRemort
+        localPeerName={localPeerName}
         remortPeerName={remortPeerName}
         setRemortPeerName={setRemortPeerName}
       />
