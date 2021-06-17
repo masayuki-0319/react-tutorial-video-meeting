@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import { useState, VFC } from 'react';
 import { InputFormLocal } from './InputFormLocal';
 import { InputFormRemort } from './InputFormRemort';
 
@@ -15,10 +15,19 @@ const getMedia = async () => {
 getMedia();
 
 const App: VFC = () => {
+  const [localPeerName, setLocalPeerName] = useState('');
+  const [remortPeerName, setRemortPeerName] = useState('');
+
   return (
     <>
-      <InputFormLocal />
-      <InputFormRemort />
+      <InputFormLocal
+        localPeerName={localPeerName}
+        setLocalPeerName={setLocalPeerName}
+      />
+      <InputFormRemort
+        remortPeerName={remortPeerName}
+        setRemortPeerName={setRemortPeerName}
+      />
     </>
   );
 };

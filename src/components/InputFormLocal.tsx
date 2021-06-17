@@ -41,7 +41,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const InputFormLocal: VFC = () => {
+type Props = {
+  localPeerName: string;
+  setLocalPeerName: (args?: any) => any;
+};
+
+export const InputFormLocal: VFC<Props> = () => {
   const label = 'あなたの名前';
   const classes = useStyles();
 
