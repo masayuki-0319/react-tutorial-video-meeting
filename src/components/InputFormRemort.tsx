@@ -46,7 +46,10 @@ type Props = {
   setRemortPeerName: (args?: any) => any;
 };
 
-export const InputFormRemort: VFC<Props> = () => {
+export const InputFormRemort: VFC<Props> = ({
+  remortPeerName,
+  setRemortPeerName,
+}) => {
   const label = '相手の名前';
   const classes = useStyles();
 

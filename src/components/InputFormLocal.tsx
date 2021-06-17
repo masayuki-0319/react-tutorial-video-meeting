@@ -6,7 +6,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { VFC } from 'react';
+import { useCallback, useEffect, useState, VFC } from 'react';
 
 function Copyright() {
   return (
@@ -46,10 +46,34 @@ type Props = {
   setLocalPeerName: (args?: any) => any;
 };
 
-export const InputFormLocal: VFC<Props> = () => {
+export const InputFormLocal: VFC<Props> = ({
+  localPeerName,
+  setLocalPeerName,
+}) => {
   const label = 'あなたの名前';
   const classes = useStyles();
 
+  const [name, setName] = useState('');
+  const [disabled, setDisabled] = useState(true);
+  const [isComposed, setIsComposed] = useState(false);
+
+  useEffect(() => {
+    const disabled = name === '' ? true : false;
+    setDisabled(disabled);
+  }, [name]);
+
+  const initializeLocalPeer = useCallback(
+    (
+      e: React.KeyboardEvent<HTMLDivElement> | React.MouseEvent<HTMLElement>
+    ) => {
+      console.log(name);
+      setLocalPeerName(name);
+      e.preventDefault();
+    },
+    [name, setLocalPeerName]
+  );
+
+  if (localPeerName !== '') return <></>;
   return (
     <Container component='main' maxWidth='xs'>
       <CssBaseline />
@@ -64,14 +88,26 @@ export const InputFormLocal: VFC<Props> = () => {
             label={label}
             margin='normal'
             name='name'
+            onChange={(e) => setName(e.target.value)}
+            onCompositionStart={() => setIsComposed(true)}
+            onCompositionEnd={() => setIsComposed(false)}
+            onKeyDown={(e) => {
+              const target = e.target as HTMLInputElement;
+              if (target.value) return;
+              if (isComposed) return;
+              if (e.key === 'Enter') initializeLocalPeer(e);
+            }}
             required
+            value={name}
             variant='outlined'
           />
           <Button
             type='submit'
+            disabled={disabled}
             fullWidth
             variant='contained'
             color='primary'
+            onClick={(e) => initializeLocalPeer(e)}
             className={classes.submit}
           >
             決定
