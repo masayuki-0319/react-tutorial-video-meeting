@@ -1,4 +1,5 @@
 import { VFC } from 'react';
+import { Button } from '@material-ui/core';
 
 const getMedia = async () => {
   const constraints: MediaStreamConstraints = { audio: true, video: true };
@@ -13,7 +14,11 @@ const getMedia = async () => {
 getMedia();
 
 const App: VFC = () => {
-  return <div>Hello, React!</div>;
+  return (
+    <Button color='primary' variant='contained'>
+      Hello, World!
+    </Button>
+  );
 };
 
 export default App;
