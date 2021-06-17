@@ -1,5 +1,6 @@
 import { VFC } from 'react';
-import { Button } from '@material-ui/core';
+import { InputFormLocal } from './InputFormLocal';
+import { InputFormRemort } from './InputFormRemort';
 
 const getMedia = async () => {
   const constraints: MediaStreamConstraints = { audio: true, video: true };
@@ -15,9 +16,10 @@ getMedia();
 
 const App: VFC = () => {
   return (
-    <Button color='primary' variant='contained'>
-      Hello, World!
-    </Button>
+    <>
+      <InputFormLocal />
+      <InputFormRemort />
+    </>
   );
 };
 
