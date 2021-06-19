@@ -1,18 +1,20 @@
 import { useRef, VFC, useEffect } from 'react';
+import { Video } from './Video';
 
 type Props = {
-  localPeerName: string;
+  name: string;
 };
 
-export const VideoLocal: VFC<Props> = ({ localPeerName }) => {
+export const VideoLocal: VFC<Props> = ({ name }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const currentVideoRef = videoRef.current;
 
+  console.log('currentVideoRef is...', currentVideoRef);
   useEffect(() => {
     if (currentVideoRef === null) return;
 
     const getMedia = async () => {
-      const constraints: MediaStreamConstraints = { audio: true, video: true };
+      const constraints = { audio: true, video: true };
 
       try {
         const mediaStream = await navigator.mediaDevices.getUserMedia(
@@ -27,5 +29,5 @@ export const VideoLocal: VFC<Props> = ({ localPeerName }) => {
     getMedia();
   }, [currentVideoRef]);
 
-  return <></>;
+  return <Video isLocal name={name} videoRef={videoRef} />;
 };

@@ -1,7 +1,6 @@
 import { Grid, makeStyles } from '@material-ui/core';
 import { VFC } from 'react';
 import { VideoLocal } from './VideoLocal';
-// import { VideoRemort } from './VideoRemort';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,11 +25,8 @@ export const VideoAria: VFC<Props> = ({ localPeerName, remortPeearName }) => {
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
-          <VideoLocal localPeerName={localPeerName} />
+          <VideoLocal name={localPeerName} />
         </Grid>
-        {/* <Grid item xs={12} sm={6}>
-          <VideoRemort remortPeerName={remortPeearName} />
-        </Grid> */}
       </Grid>
     </div>
   );
