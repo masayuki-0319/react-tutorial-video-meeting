@@ -7,6 +7,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { RtcClient } from '../utils/RtcClient';
 
 function Copyright() {
   return (
@@ -42,16 +43,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  localPeerName: string;
-  remortPeerName: string;
-  setRemortPeerName: (args?: any) => any;
+  rtcClient: RtcClient;
 };
 
-export const InputFormRemort: VFC<Props> = ({
-  localPeerName,
-  remortPeerName,
-  setRemortPeerName,
-}) => {
+export const InputFormRemort: VFC<Props> = ({ rtcClient }) => {
   const label = '相手の名前';
   const classes = useStyles();
 
@@ -68,15 +63,14 @@ export const InputFormRemort: VFC<Props> = ({
     (
       e: React.KeyboardEvent<HTMLDivElement> | React.MouseEvent<HTMLElement>
     ) => {
-      console.log(name);
-      setRemortPeerName(name);
+      rtcClient.remortPeearName = name;
       e.preventDefault();
     },
-    [name, setRemortPeerName]
+    [name, rtcClient]
   );
 
-  if (localPeerName === '') return <></>;
-  if (remortPeerName !== '') return <></>;
+  if (rtcClient.localPeerName === '') return <></>;
+  if (rtcClient.remortPeearName !== '') return <></>;
   return (
     <Container component='main' maxWidth='xs'>
       <CssBaseline />

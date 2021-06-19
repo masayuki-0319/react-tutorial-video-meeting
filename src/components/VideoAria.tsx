@@ -2,6 +2,7 @@ import { Grid, makeStyles } from '@material-ui/core';
 import { VFC } from 'react';
 import { VideoLocal } from './VideoLocal';
 import { VideoRemort } from './VideoRemort';
+import { RtcClient } from '../utils/RtcClient';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,21 +16,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  localPeerName: string;
-  remortPeearName: string;
+  rtcClient: RtcClient;
 };
 
-export const VideoAria: VFC<Props> = ({ localPeerName, remortPeearName }) => {
+export const VideoAria: VFC<Props> = ({ rtcClient }) => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
-          <VideoLocal name={localPeerName} />
+          <VideoLocal name={rtcClient.localPeerName} />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <VideoRemort name={remortPeearName} />
+          <VideoRemort name={rtcClient.remortPeearName} />
         </Grid>
       </Grid>
     </div>

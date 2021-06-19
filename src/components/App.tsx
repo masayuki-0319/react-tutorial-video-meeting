@@ -1,27 +1,17 @@
-import { useState, VFC } from 'react';
+import { VFC } from 'react';
+import { RtcClient } from '../utils/RtcClient';
 import { InputFormLocal } from './InputFormLocal';
 import { InputFormRemort } from './InputFormRemort';
 import { VideoAria } from './VideoAria';
 
 const App: VFC = () => {
-  const [localPeerName, setLocalPeerName] = useState('');
-  const [remortPeerName, setRemortPeerName] = useState('');
+  const rtcClient = new RtcClient();
 
   return (
     <>
-      <InputFormLocal
-        localPeerName={localPeerName}
-        setLocalPeerName={setLocalPeerName}
-      />
-      <InputFormRemort
-        localPeerName={localPeerName}
-        remortPeerName={remortPeerName}
-        setRemortPeerName={setRemortPeerName}
-      />
-      <VideoAria
-        localPeerName={localPeerName}
-        remortPeearName={remortPeerName}
-      />
+      <InputFormLocal rtcClient={rtcClient} />
+      <InputFormRemort rtcClient={rtcClient} />
+      <VideoAria rtcClient={rtcClient} />
     </>
   );
 };

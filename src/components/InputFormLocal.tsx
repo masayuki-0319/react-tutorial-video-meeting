@@ -7,6 +7,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { RtcClient } from '../utils/RtcClient';
 
 function Copyright() {
   return (
@@ -42,14 +43,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  localPeerName: string;
-  setLocalPeerName: (args?: any) => any;
+  rtcClient: RtcClient;
 };
 
-export const InputFormLocal: VFC<Props> = ({
-  localPeerName,
-  setLocalPeerName,
-}) => {
+export const InputFormLocal: VFC<Props> = ({ rtcClient }) => {
   const label = 'あなたの名前';
   const classes = useStyles();
 
@@ -66,14 +63,13 @@ export const InputFormLocal: VFC<Props> = ({
     (
       e: React.KeyboardEvent<HTMLDivElement> | React.MouseEvent<HTMLElement>
     ) => {
-      console.log(name);
-      setLocalPeerName(name);
+      rtcClient.localPeerName = name;
       e.preventDefault();
     },
-    [name, setLocalPeerName]
+    [rtcClient, name]
   );
 
-  if (localPeerName !== '') return <></>;
+  if (rtcClient.localPeerName !== '') return <></>;
   return (
     <Container component='main' maxWidth='xs'>
       <CssBaseline />
