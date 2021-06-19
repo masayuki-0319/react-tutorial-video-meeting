@@ -1,9 +1,11 @@
 import { VFC } from 'react';
+import { Video } from './Video';
 
 type Props = {
-  remortPeerName: string;
+  name: string;
 };
 
-export const VideoRemort: VFC<Props> = ({ remortPeerName }) => {
-  return <div></div>;
+export const VideoRemort: VFC<Props> = ({ name }) => {
+  const videoRef = null;
+  return <Video isLocal={false} name={name} videoRef={videoRef} />;
 };

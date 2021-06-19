@@ -9,7 +9,6 @@ export const VideoLocal: VFC<Props> = ({ name }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const currentVideoRef = videoRef.current;
 
-  console.log('currentVideoRef is...', currentVideoRef);
   useEffect(() => {
     if (currentVideoRef === null) return;
 
