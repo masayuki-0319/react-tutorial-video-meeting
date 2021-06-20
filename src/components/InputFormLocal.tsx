@@ -63,8 +63,7 @@ export const InputFormLocal: VFC<Props> = ({ rtcClient }) => {
     (
       e: React.KeyboardEvent<HTMLDivElement> | React.MouseEvent<HTMLElement>
     ) => {
-      rtcClient.localPeerName = name;
-      rtcClient.setRtcClient();
+      rtcClient.startListening(name);
       e.preventDefault();
     },
     [rtcClient, name]
