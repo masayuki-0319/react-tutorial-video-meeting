@@ -121,7 +121,7 @@ export class RtcClient {
     this.setRtcClient();
   }
 
-  private localDescription() {
+  get localDescription() {
     return this.rtcPeerConnection.localDescription?.toJSON();
   }
 
