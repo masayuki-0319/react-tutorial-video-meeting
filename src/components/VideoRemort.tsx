@@ -3,10 +3,17 @@ import { Video } from './Video';
 import { RtcClient } from '../utils/RtcClient';
 
 type Props = {
-  rtcClient: RtcClient
+  rtcClient: RtcClient;
 };
 
 export const VideoRemort: VFC<Props> = ({ rtcClient }) => {
-  const videoRef = null;
-  return <Video isLocal={false} name={rtcClient.remortPeearName} videoRef={videoRef} />;
+  const videoRef = rtcClient.remortVideoRef;
+
+  return (
+    <Video
+      isLocal={false}
+      name={rtcClient.remortPeearName}
+      videoRef={videoRef}
+    />
+  );
 };
