@@ -22,6 +22,7 @@ type Props = {
 export const VideoAria: VFC<Props> = ({ rtcClient }) => {
   const classes = useStyles();
 
+  if (rtcClient === null) return <></>;
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>

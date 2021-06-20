@@ -1,22 +1,15 @@
-import { VFC, useState, useReducer } from 'react';
-import { RtcClient } from '../utils/RtcClient';
-import { InputFormLocal } from './InputFormLocal';
-import { InputFormRemort } from './InputFormRemort';
+import { VFC } from 'react';
+import { useRtcClent } from './hooks/useRtcClient';
+import { InputForms } from './InputForms';
 import { VideoAria } from './VideoAria';
 
 const App: VFC = () => {
-  const [rtcClient, _setRtcClient] = useState(new RtcClient());
-  const [, forceRender] = useReducer((boolean: boolean) => !boolean, false);
+  const { rtcClient } = useRtcClent();
 
-  const setRtcClient = (rtcClient: RtcClient) => {
-    _setRtcClient(rtcClient);
-    forceRender();
-  };
-
+  if (rtcClient === null) return <></>;
   return (
     <>
-      <InputFormLocal rtcClient={rtcClient} setRtcClient={setRtcClient} />
-      <InputFormRemort rtcClient={rtcClient} setRtcClient={setRtcClient} />
+      <InputForms rtcClient={rtcClient} />
       <VideoAria rtcClient={rtcClient} />
     </>
   );

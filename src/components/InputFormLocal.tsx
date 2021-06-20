@@ -44,10 +44,9 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   rtcClient: RtcClient;
-  setRtcClient: (args?: any) => any;
 };
 
-export const InputFormLocal: VFC<Props> = ({ rtcClient, setRtcClient }) => {
+export const InputFormLocal: VFC<Props> = ({ rtcClient }) => {
   const label = 'あなたの名前';
   const classes = useStyles();
 
@@ -65,10 +64,10 @@ export const InputFormLocal: VFC<Props> = ({ rtcClient, setRtcClient }) => {
       e: React.KeyboardEvent<HTMLDivElement> | React.MouseEvent<HTMLElement>
     ) => {
       rtcClient.localPeerName = name;
-      setRtcClient(rtcClient);
+      rtcClient.setRtcClient();
       e.preventDefault();
     },
-    [rtcClient, name, setRtcClient]
+    [rtcClient, name]
   );
 
   if (rtcClient.localPeerName !== '') return <></>;
