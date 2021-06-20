@@ -1,9 +1,12 @@
+import { FirebaseSignallingClient } from './FirebaseSignallingClient';
+
 type ConstructorProps = {
   setRtcClient: (rtcClient: RtcClient) => void;
 };
 
 export class RtcClient {
   rtcPeerConnection: RTCPeerConnection;
+  firebaseSignallingClient: FirebaseSignallingClient;
   localPeerName: string;
   remortPeearName: string;
   private _setRtcClient: (rtcClient: RtcClient) => void;
@@ -12,6 +15,7 @@ export class RtcClient {
   constructor({ setRtcClient }: ConstructorProps) {
     const config = { iceServers: [{ urls: 'stun:stun.stunprotocol.org' }] };
     this.rtcPeerConnection = new RTCPeerConnection(config);
+    this.firebaseSignallingClient = new FirebaseSignallingClient();
     this.localPeerName = '';
     this.remortPeearName = '';
     this._setRtcClient = setRtcClient;
@@ -34,5 +38,12 @@ export class RtcClient {
   startListening(localPeerName: string) {
     this.localPeerName = localPeerName;
     this.setRtcClient();
+
+    this.firebaseSignallingClient.database
+      .ref(localPeerName)
+      .on('value', (snapshot) => {
+        const data = snapshot.val();
+        console.log(data);
+      });
   }
 }
