@@ -1,5 +1,5 @@
 type ConstructorProps = {
-  setRtcClient: (args?: any) => void;
+  setRtcClient: (rtcClient: RtcClient) => void;
 };
 
 export class RtcClient {
