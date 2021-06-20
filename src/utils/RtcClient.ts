@@ -35,6 +35,33 @@ export class RtcClient {
     }
   }
 
+  async setMediaStream() {
+    await this.getUserMedia();
+    this.addTracks();
+
+    this.setRtcClient();
+  }
+
+  private addTracks() {
+    this.addAudioTrack();
+    this.addVideoTrack();
+  }
+
+  private addAudioTrack() {
+    const audioTack = this.mediaStream?.getAudioTracks()[0];
+    this.rtcPeerConnection.addTrack(
+      audioTack as MediaStreamTrack,
+      this.mediaStream as MediaStream
+    );
+  }
+  private addVideoTrack() {
+    const videoTack = this.mediaStream?.getVideoTracks()[0];
+    this.rtcPeerConnection.addTrack(
+      videoTack as MediaStreamTrack,
+      this.mediaStream as MediaStream
+    );
+  }
+
   startListening(localPeerName: string) {
     this.localPeerName = localPeerName;
     this.setRtcClient();

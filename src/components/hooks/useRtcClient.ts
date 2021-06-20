@@ -13,8 +13,7 @@ export const useRtcClent = () => {
   useEffect(() => {
     const init = async () => {
       const client = new RtcClient({ setRtcClient: setRtcClient });
-      await client.getUserMedia();
-      client.setRtcClient();
+      await client.setMediaStream();
     };
 
     init();
