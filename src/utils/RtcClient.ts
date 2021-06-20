@@ -65,6 +65,41 @@ export class RtcClient {
     );
   }
 
+  private async offer() {
+    const sessionDescription = await this.createOffer();
+    await this.setLocalDescription(
+      sessionDescription as RTCSessionDescriptionInit
+    );
+
+    await this.sendOffer();
+  }
+
+  private async createOffer() {
+    try {
+      return await this.rtcPeerConnection.createOffer();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  private async sendOffer() {
+    this.firebaseSignallingClient.setPeerNames(
+      this.localPeerName,
+      this.remortPeearName
+    );
+    await this.firebaseSignallingClient.sendOffer(this.localDescription);
+  }
+
+  private async setLocalDescription(
+    sessionDescription: RTCSessionDescriptionInit
+  ) {
+    try {
+      await this.rtcPeerConnection.setLocalDescription(sessionDescription);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   private setOnTrack() {
     this.rtcPeerConnection.ontrack = (rtcTrackEvent) => {
       if (this.remortVideoRef.current === null) return;
@@ -78,11 +113,16 @@ export class RtcClient {
     this.setRtcClient();
   }
 
-  connect(remortPeerName: string) {
+  async connect(remortPeerName: string) {
     this.remortPeearName = remortPeerName;
     this.setOnicecandidateCallback();
     this.setOnTrack();
+    await this.offer();
     this.setRtcClient();
+  }
+
+  private localDescription() {
+    return this.rtcPeerConnection.localDescription?.toJSON();
   }
 
   private setOnicecandidateCallback() {

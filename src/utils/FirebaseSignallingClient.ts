@@ -25,4 +25,21 @@ export class FirebaseSignallingClient {
     this.localPeerName = '';
     this.remortPeearName = '';
   }
+
+  setPeerNames(localPeerName: string, remortPeearName: string) {
+    this.localPeerName = localPeerName;
+    this.remortPeearName = remortPeearName;
+  }
+
+  private targetRef() {
+    return this.database.ref(this.remortPeearName);
+  }
+
+  async sendOffer(sessionDescription: any) {
+    await this.targetRef().set({
+      type: 'offer',
+      sender: this.localPeerName,
+      sessionDescription,
+    });
+  }
 }

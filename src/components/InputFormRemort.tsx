@@ -60,10 +60,10 @@ export const InputFormRemort: VFC<Props> = ({ rtcClient }) => {
   }, [name]);
 
   const initializeRemortPeer = useCallback(
-    (
+    async (
       e: React.KeyboardEvent<HTMLDivElement> | React.MouseEvent<HTMLElement>
     ) => {
-      rtcClient.connect(name);
+      await rtcClient.connect(name);
       e.preventDefault();
     },
     [name, rtcClient]
@@ -88,11 +88,11 @@ export const InputFormRemort: VFC<Props> = ({ rtcClient }) => {
             onChange={(e) => setName(e.target.value)}
             onCompositionStart={() => setIsComposed(true)}
             onCompositionEnd={() => setIsComposed(false)}
-            onKeyDown={(e) => {
+            onKeyDown={async (e) => {
               const target = e.target as HTMLInputElement;
               if (target.value) return;
               if (isComposed) return;
-              if (e.key === 'Enter') initializeRemortPeer(e);
+              if (e.key === 'Enter') await initializeRemortPeer(e);
             }}
             required
             value={name}
@@ -104,7 +104,7 @@ export const InputFormRemort: VFC<Props> = ({ rtcClient }) => {
             fullWidth
             variant='contained'
             color='primary'
-            onClick={(e) => initializeRemortPeer(e)}
+            onClick={async (e) => await initializeRemortPeer(e)}
             className={classes.submit}
           >
             決定
