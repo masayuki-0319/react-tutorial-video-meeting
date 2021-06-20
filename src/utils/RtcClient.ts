@@ -1,4 +1,5 @@
 import { FirebaseSignallingClient } from './FirebaseSignallingClient';
+import { SignallingData } from './Types';
 
 type ConstructorProps = {
   setRtcClient: (rtcClient: RtcClient) => void;
@@ -45,19 +46,20 @@ export class RtcClient {
     this.setRtcClient();
   }
 
-  private addTracks() {
+  addTracks() {
     this.addAudioTrack();
     this.addVideoTrack();
   }
 
-  private addAudioTrack() {
+  addAudioTrack() {
     const audioTack = this.mediaStream?.getAudioTracks()[0];
     this.rtcPeerConnection.addTrack(
       audioTack as MediaStreamTrack,
       this.mediaStream as MediaStream
     );
   }
-  private addVideoTrack() {
+
+  addVideoTrack() {
     const videoTack = this.mediaStream?.getVideoTracks()[0];
     this.rtcPeerConnection.addTrack(
       videoTack as MediaStreamTrack,
@@ -65,7 +67,7 @@ export class RtcClient {
     );
   }
 
-  private async offer() {
+  async offer() {
     const sessionDescription = await this.createOffer();
     await this.setLocalDescription(
       sessionDescription as RTCSessionDescriptionInit
@@ -74,7 +76,7 @@ export class RtcClient {
     await this.sendOffer();
   }
 
-  private async createOffer() {
+  async createOffer() {
     try {
       return await this.rtcPeerConnection.createOffer();
     } catch (error) {
@@ -82,7 +84,7 @@ export class RtcClient {
     }
   }
 
-  private async sendOffer() {
+  async sendOffer() {
     this.firebaseSignallingClient.setPeerNames(
       this.localPeerName,
       this.remortPeearName
@@ -90,9 +92,7 @@ export class RtcClient {
     await this.firebaseSignallingClient.sendOffer(this.localDescription);
   }
 
-  private async setLocalDescription(
-    sessionDescription: RTCSessionDescriptionInit
-  ) {
+  async setLocalDescription(sessionDescription: RTCSessionDescriptionInit) {
     try {
       await this.rtcPeerConnection.setLocalDescription(sessionDescription);
     } catch (error) {
@@ -100,7 +100,7 @@ export class RtcClient {
     }
   }
 
-  private setOnTrack() {
+  setOnTrack() {
     this.rtcPeerConnection.ontrack = (rtcTrackEvent) => {
       if (this.remortVideoRef.current === null) return;
       if (rtcTrackEvent.track.kind !== 'video') return;
@@ -113,6 +113,16 @@ export class RtcClient {
     this.setRtcClient();
   }
 
+  async answer(sender: string, sessionDescription: any) {
+    this.remortPeearName = sender;
+    this.setOnicecandidateCallback();
+    this.setOnTrack();
+    await this.setRemoteDescription(sessionDescription);
+    const answer = await this.rtcPeerConnection.createAnswer();
+    this.rtcPeerConnection.setLocalDescription(answer);
+    await this.sendAnswer();
+  }
+
   async connect(remortPeerName: string) {
     this.remortPeearName = remortPeerName;
     this.setOnicecandidateCallback();
@@ -121,11 +131,23 @@ export class RtcClient {
     this.setRtcClient();
   }
 
+  async setRemoteDescription(sessionDescription: any) {
+    this.rtcPeerConnection.setRemoteDescription(sessionDescription);
+  }
+
+  async sendAnswer() {
+    this.firebaseSignallingClient.setPeerNames(
+      this.localDescription,
+      this.remortPeearName
+    );
+    await this.firebaseSignallingClient.sendAnswer(this.localDescription);
+  }
+
   get localDescription() {
     return this.rtcPeerConnection.localDescription?.toJSON();
   }
 
-  private setOnicecandidateCallback() {
+  setOnicecandidateCallback() {
     this.rtcPeerConnection.onicecandidate = ({ candidate }) => {
       if (candidate) {
         console.log(candidate);
@@ -139,9 +161,19 @@ export class RtcClient {
 
     this.firebaseSignallingClient.database
       .ref(localPeerName)
-      .on('value', (snapshot) => {
-        const data = snapshot.val();
-        console.log(data);
+      .on('value', async (snapshot) => {
+        const data = snapshot.val() as SignallingData | null;
+        if (data === null) return;
+        console.log('data: ', data);
+        const { sender, type, sessionDescription } = data;
+
+        switch (type) {
+          case 'offer':
+            await this.answer(sender, sessionDescription);
+            break;
+          default:
+            break;
+        }
       });
   }
 }

@@ -31,13 +31,21 @@ export class FirebaseSignallingClient {
     this.remortPeearName = remortPeearName;
   }
 
-  private targetRef() {
+  get targetRef() {
     return this.database.ref(this.remortPeearName);
   }
 
   async sendOffer(sessionDescription: any) {
-    await this.targetRef().set({
+    await this.targetRef.set({
       type: 'offer',
+      sender: this.localPeerName,
+      sessionDescription,
+    });
+  }
+
+  async sendAnswer(sessionDescription: any) {
+    this.targetRef.set({
+      type: 'answer',
       sender: this.localPeerName,
       sessionDescription,
     });
