@@ -7,6 +7,7 @@ export class RtcClient {
   localPeerName: string;
   remortPeearName: string;
   private _setRtcClient: (rtcClient: RtcClient) => void;
+  mediaStream: MediaStream | null;
 
   constructor({ setRtcClient }: ConstructorProps) {
     const config = { iceServers: [{ urls: 'stun:stun.stunprotocol.org' }] };
@@ -14,9 +15,19 @@ export class RtcClient {
     this.localPeerName = '';
     this.remortPeearName = '';
     this._setRtcClient = setRtcClient;
+    this.mediaStream = null;
   }
 
   setRtcClient() {
     this._setRtcClient(this);
+  }
+
+  async getUserMedia() {
+    try {
+      const constraints = { audio: true, video: true };
+      this.mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

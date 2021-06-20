@@ -27,10 +27,10 @@ export const VideoAria: VFC<Props> = ({ rtcClient }) => {
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
-          <VideoLocal name={rtcClient.localPeerName} />
+          <VideoLocal rtcClient={rtcClient} />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <VideoRemort name={rtcClient.remortPeearName} />
+          <VideoRemort rtcClient={rtcClient} />
         </Grid>
       </Grid>
     </div>

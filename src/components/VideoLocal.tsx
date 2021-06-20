@@ -1,24 +1,21 @@
 import { useRef, VFC, useEffect } from 'react';
 import { Video } from './Video';
+import { RtcClient } from '../utils/RtcClient';
 
 type Props = {
-  name: string;
+  rtcClient: RtcClient;
 };
 
-export const VideoLocal: VFC<Props> = ({ name }) => {
+export const VideoLocal: VFC<Props> = ({ rtcClient }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const currentVideoRef = videoRef.current;
+  const mediaStream = rtcClient.mediaStream;
 
   useEffect(() => {
     if (currentVideoRef === null) return;
 
-    const getMedia = async () => {
-      const constraints = { audio: true, video: true };
-
+    const getMedia = () => {
       try {
-        const mediaStream = await navigator.mediaDevices.getUserMedia(
-          constraints
-        );
         currentVideoRef.srcObject = mediaStream;
       } catch (err) {
         console.error(err);
@@ -26,7 +23,7 @@ export const VideoLocal: VFC<Props> = ({ name }) => {
     };
 
     getMedia();
-  }, [currentVideoRef]);
+  }, [currentVideoRef, mediaStream]);
 
-  return <Video isLocal name={name} videoRef={videoRef} />;
+  return <Video isLocal name={rtcClient.localPeerName} videoRef={videoRef} />;
 };
