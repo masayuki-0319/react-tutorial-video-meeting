@@ -63,8 +63,7 @@ export const InputFormRemort: VFC<Props> = ({ rtcClient }) => {
     (
       e: React.KeyboardEvent<HTMLDivElement> | React.MouseEvent<HTMLElement>
     ) => {
-      rtcClient.remortPeearName = name;
-      rtcClient.setRtcClient();
+      rtcClient.connect(name);
       e.preventDefault();
     },
     [name, rtcClient]

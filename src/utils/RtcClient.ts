@@ -65,6 +65,34 @@ export class RtcClient {
     );
   }
 
+  private setOnTrack() {
+    this.rtcPeerConnection.ontrack = (rtcTrackEvent) => {
+      if (this.remortVideoRef.current === null) return;
+      if (rtcTrackEvent.track.kind !== 'video') return;
+
+      const remortMediaStream = rtcTrackEvent.streams[0];
+      this.remortVideoRef.current.srcObject = remortMediaStream;
+      this.setRtcClient();
+    };
+
+    this.setRtcClient();
+  }
+
+  connect(remortPeerName: string) {
+    this.remortPeearName = remortPeerName;
+    this.setOnicecandidateCallback();
+    this.setOnTrack();
+    this.setRtcClient();
+  }
+
+  private setOnicecandidateCallback() {
+    this.rtcPeerConnection.onicecandidate = ({ candidate }) => {
+      if (candidate) {
+        console.log(candidate);
+      }
+    };
+  }
+
   startListening(localPeerName: string) {
     this.localPeerName = localPeerName;
     this.setRtcClient();
