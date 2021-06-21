@@ -60,10 +60,10 @@ export const InputFormLocal: VFC<Props> = ({ rtcClient }) => {
   }, [name]);
 
   const initializeLocalPeer = useCallback(
-    (
+    async (
       e: React.KeyboardEvent<HTMLDivElement> | React.MouseEvent<HTMLElement>
     ) => {
-      rtcClient.startListening(name);
+      await rtcClient.startListening(name);
       e.preventDefault();
     },
     [rtcClient, name]
@@ -87,11 +87,11 @@ export const InputFormLocal: VFC<Props> = ({ rtcClient }) => {
             onChange={(e) => setName(e.target.value)}
             onCompositionStart={() => setIsComposed(true)}
             onCompositionEnd={() => setIsComposed(false)}
-            onKeyDown={(e) => {
+            onKeyDown={async (e) => {
               const target = e.target as HTMLInputElement;
               if (target.value) return;
               if (isComposed) return;
-              if (e.key === 'Enter') initializeLocalPeer(e);
+              if (e.key === 'Enter') await initializeLocalPeer(e);
             }}
             required
             value={name}
@@ -103,7 +103,7 @@ export const InputFormLocal: VFC<Props> = ({ rtcClient }) => {
             fullWidth
             variant='contained'
             color='primary'
-            onClick={(e) => initializeLocalPeer(e)}
+            onClick={async (e) => await initializeLocalPeer(e)}
             className={classes.submit}
           >
             決定

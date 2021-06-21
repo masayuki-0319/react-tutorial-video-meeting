@@ -50,4 +50,8 @@ export class FirebaseSignallingClient {
       sessionDescription,
     });
   }
+
+  async remove(path: string) {
+    await this.database.ref(path).remove();
+  }
 }
