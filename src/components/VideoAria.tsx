@@ -25,7 +25,7 @@ export const VideoAria: VFC<Props> = ({ rtcClient }) => {
   if (rtcClient === null) return <></>;
   return (
     <div className={classes.root}>
-      <Grid container spacing={3}>
+      <Grid container>
         <Grid item xs={12} sm={6}>
           <VideoLocal rtcClient={rtcClient} />
         </Grid>
