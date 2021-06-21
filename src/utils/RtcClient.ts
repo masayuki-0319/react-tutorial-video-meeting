@@ -119,7 +119,7 @@ export class RtcClient {
     this.setOnTrack();
     await this.setRemoteDescription(sessionDescription);
     const answer = await this.rtcPeerConnection.createAnswer();
-    this.rtcPeerConnection.setLocalDescription(answer);
+    await this.rtcPeerConnection.setLocalDescription(answer);
     await this.sendAnswer();
   }
 
@@ -155,10 +155,20 @@ export class RtcClient {
     return this.rtcPeerConnection.localDescription?.toJSON();
   }
 
-  setOnicecandidateCallback() {
-    this.rtcPeerConnection.onicecandidate = ({ candidate }) => {
+  async addIceCandidate(candidate: RTCIceCandidateInit) {
+    try {
+      const iceCandidate = new RTCIceCandidate(candidate);
+      await this.rtcPeerConnection.addIceCandidate(iceCandidate);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async setOnicecandidateCallback() {
+    this.rtcPeerConnection.onicecandidate = async ({ candidate }) => {
       if (candidate) {
-        console.log(candidate);
+        console.log('candidate', candidate);
+        await this.firebaseSignallingClient.sendCandidate(candidate.toJSON());
       }
     };
   }
@@ -173,7 +183,7 @@ export class RtcClient {
         const data = snapshot.val() as SignallingData | null;
         if (data === null) return;
         console.log('data: ', data);
-        const { sender, type, sessionDescription } = data;
+        const { candidate, sender, type, sessionDescription } = data;
 
         switch (type) {
           case 'offer':
@@ -182,7 +192,11 @@ export class RtcClient {
           case 'answer':
             this.savaReceivedSessionDescription(sessionDescription);
             break;
+          case 'candidate':
+            await this.addIceCandidate(candidate as RTCIceCandidateInit);
+            break;
           default:
+            this.setRtcClient();
             break;
         }
       });
