@@ -1,5 +1,5 @@
-import { VFC } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { VFC, useRef } from 'react';
+import { useDimensions } from './hooks/useDimentions';
 import {
   Card,
   CardActionArea,
@@ -14,19 +14,19 @@ type Props = {
   videoRef: React.RefObject<HTMLVideoElement> | null;
 };
 
-const useStyles = makeStyles({
-  root: {
-    maxWidth: 345,
-  },
-});
-
 export const Video: VFC<Props> = ({ isLocal, name, videoRef }) => {
-  const classes = useStyles();
+  const refCard = useRef(null);
+  const { dimensions } = useDimensions(refCard);
 
   return (
-    <Card className={classes.root}>
+    <Card ref={refCard}>
       <CardActionArea>
-        <video autoPlay muted={isLocal} ref={videoRef}></video>
+        <video
+          autoPlay
+          muted={isLocal}
+          ref={videoRef}
+          width={dimensions.width}
+        ></video>
         <CardContent>
           <Typography gutterBottom variant='h5' component='h2'>
             {name}
