@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import { VolumeBottun } from './VolumeBottun';
 import { RtcClient } from '../utils/RtcClient';
+import { AudioAnalyser } from './AudioAnalyzer';
 
 type Props = {
   isLocal: boolean;
@@ -38,7 +39,15 @@ export const Video: VFC<Props> = ({ isLocal, name, rtcClient, videoRef }) => {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <VolumeBottun muted={muted} setMuted={setMuted} rtcClient={rtcClient} isLocal={isLocal} />
+        <VolumeBottun
+          muted={muted}
+          setMuted={setMuted}
+          rtcClient={rtcClient}
+          isLocal={isLocal}
+        />
+        {!muted && videoRef?.current && videoRef?.current.srcObject && (
+          <AudioAnalyser audio={videoRef.current.srcObject} />
+        )}
       </CardActions>
     </Card>
   );
