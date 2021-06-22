@@ -11,7 +11,7 @@ type Props = {
   isLocal: boolean;
 };
 
-export const VolumeBottun: VFC<Props> = ({
+export const VolumeButton: VFC<Props> = ({
   muted,
   setMuted,
   rtcClient,

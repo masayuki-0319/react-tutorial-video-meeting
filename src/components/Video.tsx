@@ -1,5 +1,4 @@
 import { VFC, useRef, useState } from 'react';
-import { useDimensions } from './hooks/useDimentions';
 import {
   Card,
   CardActionArea,
@@ -7,9 +6,11 @@ import {
   CardContent,
   Typography,
 } from '@material-ui/core';
-import { VolumeBottun } from './VolumeBottun';
-import { RtcClient } from '../utils/RtcClient';
+
+import { VolumeButton } from './VolumeButton';
+import { useDimensions } from './hooks/useDimentions';
 import { AudioAnalyser } from './AudioAnalyzer';
+import { RtcClient } from '../utils/RtcClient';
 
 type Props = {
   isLocal: boolean;
@@ -39,7 +40,7 @@ export const Video: VFC<Props> = ({ isLocal, name, rtcClient, videoRef }) => {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <VolumeBottun
+        <VolumeButton
           muted={muted}
           setMuted={setMuted}
           rtcClient={rtcClient}
