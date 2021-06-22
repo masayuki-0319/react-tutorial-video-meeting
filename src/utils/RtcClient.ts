@@ -1,6 +1,8 @@
 import { FirebaseSignallingClient } from './FirebaseSignallingClient';
 import { SignallingData } from './Types';
 
+const INITIAL_AUDIO_ENABLED = false;
+
 type ConstructorProps = {
   setRtcClient: (rtcClient: RtcClient) => void;
   remortVideoRef: React.RefObject<HTMLVideoElement>;
@@ -24,6 +26,10 @@ export class RtcClient {
     this._setRtcClient = setRtcClient;
     this.mediaStream = null;
     this.remortVideoRef = remortVideoRef;
+  }
+
+  get initialAudifMuted() {
+    return !INITIAL_AUDIO_ENABLED;
   }
 
   setRtcClient() {
@@ -52,19 +58,31 @@ export class RtcClient {
   }
 
   addAudioTrack() {
-    const audioTack = this.mediaStream?.getAudioTracks()[0];
+    this.audioTrack.enabled = INITIAL_AUDIO_ENABLED;
     this.rtcPeerConnection.addTrack(
-      audioTack as MediaStreamTrack,
+      this.audioTrack as MediaStreamTrack,
       this.mediaStream as MediaStream
     );
   }
 
   addVideoTrack() {
-    const videoTack = this.mediaStream?.getVideoTracks()[0];
     this.rtcPeerConnection.addTrack(
-      videoTack as MediaStreamTrack,
+      this.videoTrack as MediaStreamTrack,
       this.mediaStream as MediaStream
     );
+  }
+
+  get audioTrack(): MediaStreamTrack {
+    return this.mediaStream!.getAudioTracks()[0];
+  }
+
+  get videoTrack(): MediaStreamTrack {
+    return this.mediaStream!.getVideoTracks()[0];
+  }
+
+  toggleAudio() {
+    this.audioTrack.enabled = !this.audioTrack.enabled;
+    this.setRtcClient();
   }
 
   async offer() {
@@ -167,7 +185,6 @@ export class RtcClient {
   async setOnicecandidateCallback() {
     this.rtcPeerConnection.onicecandidate = async ({ candidate }) => {
       if (candidate) {
-        console.log('candidate', candidate);
         await this.firebaseSignallingClient.sendCandidate(candidate.toJSON());
       }
     };
@@ -182,7 +199,6 @@ export class RtcClient {
       .on('value', async (snapshot) => {
         const data = snapshot.val() as SignallingData | null;
         if (data === null) return;
-        console.log('data: ', data);
         const { candidate, sender, type, sessionDescription } = data;
 
         switch (type) {

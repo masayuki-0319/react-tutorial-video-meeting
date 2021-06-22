@@ -13,6 +13,7 @@ export const VideoRemort: VFC<Props> = ({ rtcClient }) => {
     <Video
       isLocal={false}
       name={rtcClient.remortPeearName}
+      rtcClient={rtcClient}
       videoRef={videoRef}
     />
   );

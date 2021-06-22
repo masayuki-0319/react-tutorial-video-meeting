@@ -25,5 +25,12 @@ export const VideoLocal: VFC<Props> = ({ rtcClient }) => {
     getMedia();
   }, [currentVideoRef, mediaStream]);
 
-  return <Video isLocal name={rtcClient.localPeerName} videoRef={videoRef} />;
+  return (
+    <Video
+      isLocal
+      name={rtcClient.localPeerName}
+      videoRef={videoRef}
+      rtcClient={rtcClient}
+    />
+  );
 };

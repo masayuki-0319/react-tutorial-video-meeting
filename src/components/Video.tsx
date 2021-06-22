@@ -8,15 +8,17 @@ import {
   Typography,
 } from '@material-ui/core';
 import { VolumeBottun } from './VolumeBottun';
+import { RtcClient } from '../utils/RtcClient';
 
 type Props = {
   isLocal: boolean;
   name: string;
+  rtcClient: RtcClient;
   videoRef: React.RefObject<HTMLVideoElement> | null;
 };
 
-export const Video: VFC<Props> = ({ isLocal, name, videoRef }) => {
-  const [muted, setMuted] = useState(true);
+export const Video: VFC<Props> = ({ isLocal, name, rtcClient, videoRef }) => {
+  const [muted, setMuted] = useState(rtcClient.initialAudifMuted);
   const refCard = useRef(null);
   const { dimensions } = useDimensions(refCard);
 
@@ -36,7 +38,7 @@ export const Video: VFC<Props> = ({ isLocal, name, videoRef }) => {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <VolumeBottun muted={muted} setMuted={setMuted} />
+        <VolumeBottun muted={muted} setMuted={setMuted} rtcClient={rtcClient} isLocal={isLocal} />
       </CardActions>
     </Card>
   );
