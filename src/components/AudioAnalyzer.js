@@ -31,7 +31,12 @@ class AudioAnalyser extends Component {
   }
 
   render() {
-    return <AudioVisualiser audioData={this.state.audioData} />;
+    return (
+      <AudioVisualiser
+        width={this.props.width}
+        audioData={this.state.audioData}
+      />
+    );
   }
 }
 

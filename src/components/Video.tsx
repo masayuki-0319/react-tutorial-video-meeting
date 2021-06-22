@@ -23,6 +23,8 @@ export const Video: VFC<Props> = ({ isLocal, name, rtcClient, videoRef }) => {
   const [muted, setMuted] = useState(rtcClient.initialAudifMuted);
   const refCard = useRef(null);
   const { dimensions } = useDimensions(refCard);
+  const refVolumeButton = useRef(null);
+  const dimentionVolumeButton = useDimensions(refVolumeButton);
 
   return (
     <Card ref={refCard}>
@@ -41,13 +43,19 @@ export const Video: VFC<Props> = ({ isLocal, name, rtcClient, videoRef }) => {
       </CardActionArea>
       <CardActions>
         <VolumeButton
-          muted={muted}
-          setMuted={setMuted}
-          rtcClient={rtcClient}
           isLocal={isLocal}
+          muted={muted}
+          rtcClient={rtcClient}
+          setMuted={setMuted}
+          refVolumeButton={refVolumeButton}
         />
         {!muted && videoRef?.current && videoRef?.current.srcObject && (
-          <AudioAnalyser audio={videoRef.current.srcObject} />
+          <AudioAnalyser
+            audio={videoRef.current.srcObject}
+            width={
+              dimensions.width - dimentionVolumeButton.dimensions.width - 40
+            }
+          />
         )}
       </CardActions>
     </Card>
