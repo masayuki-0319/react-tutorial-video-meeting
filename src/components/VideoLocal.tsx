@@ -1,4 +1,5 @@
 import { useRef, VFC, useEffect } from 'react';
+
 import { Video } from './Video';
 import { RtcClient } from '../utils/RtcClient';
 
@@ -25,6 +26,8 @@ export const VideoLocal: VFC<Props> = ({ rtcClient }) => {
     getMedia();
   }, [currentVideoRef, mediaStream]);
 
+  if (rtcClient.localPeerName === '' || rtcClient.remortPeearName === '')
+    return <></>;
   return (
     <Video
       isLocal
