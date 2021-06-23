@@ -1,20 +1,37 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
+
 import { AudioVisualiser } from './AudioVisualiser';
 
-class AudioAnalyser extends Component {
-  constructor(props) {
+type Props = {
+  audio: HTMLMediaElement['srcObject'];
+  width: number;
+};
+
+type State = {
+  audioData: Uint8Array;
+};
+
+export class AudioAnalyser extends Component<Props, State> {
+  audioContext: AudioContext;
+  analyser: AnalyserNode;
+  dataArray: Uint8Array;
+  source: MediaStreamAudioSourceNode;
+  rafId: any;
+
+  constructor(props: Props) {
     super(props);
     this.state = { audioData: new Uint8Array(0) };
     this.tick = this.tick.bind(this);
+    this.audioContext = new window.AudioContext();
+    this.analyser = this.audioContext.createAnalyser();
+    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+    this.source = this.audioContext.createMediaStreamSource(
+      this.props.audio as MediaStream
+    );
+    this.source.connect(this.analyser);
   }
 
   componentDidMount() {
-    this.audioContext = new (window.AudioContext ||
-      window.webkitAudioContext)();
-    this.analyser = this.audioContext.createAnalyser();
-    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
-    this.source = this.audioContext.createMediaStreamSource(this.props.audio);
-    this.source.connect(this.analyser);
     this.rafId = requestAnimationFrame(this.tick);
   }
 
@@ -39,5 +56,3 @@ class AudioAnalyser extends Component {
     );
   }
 }
-
-export { AudioAnalyser };
